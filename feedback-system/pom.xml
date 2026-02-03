@@ -17,6 +17,7 @@
         <skipITs>true</skipITs>
         <surefire-plugin.version>3.5.4</surefire-plugin.version>
         <aws.sdk.version>2.29.29</aws.sdk.version>
+        <sonar.organization>odeiomicrosoft22</sonar.organization>
     </properties>
 
     <dependencyManagement>
