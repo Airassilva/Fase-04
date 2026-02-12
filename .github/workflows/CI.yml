@@ -45,12 +45,10 @@ jobs:
           restore-keys: ${{ runner.os }}-sonar
 
       - name: Build, Test & Analyze
+        working-directory: ${{ env.WORKING_DIR }}
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn -B verify \
-          org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
-          -Dsonar.projectKey=Airassilva_Fase-04 \
-          --file ${{ env.WORKING_DIR }}/pom.xml
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Airassilva_Fase-04
 
       - name: Upload test results
         if: always()
