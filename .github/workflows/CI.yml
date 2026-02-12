@@ -7,6 +7,10 @@ on:
     types: [opened, synchronize, reopened]
     branches: [ "main" ]
 
+permissions:
+  contents: write
+  security-events: write
+
 env:
   JAVA_VERSION: '17'
   WORKING_DIR: feedback-system
