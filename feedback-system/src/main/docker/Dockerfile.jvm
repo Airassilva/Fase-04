@@ -82,6 +82,6 @@ FROM public.ecr.aws/lambda/java:17
 
 COPY target/*-runner.jar ${LAMBDA_TASK_ROOT}/application.jar
 
-CMD ["io.quarkus.amazon.lambda.http.LambdaHttpHandler::handleRequest"]
+CMD ["io.quarkus.amazon.lambda.http.QuarkusHttpHandler"]
 
 

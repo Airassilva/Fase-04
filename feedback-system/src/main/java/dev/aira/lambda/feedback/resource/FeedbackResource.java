@@ -2,6 +2,8 @@ package dev.aira.lambda.feedback.resource;
 
 import dev.aira.lambda.feedback.dto.FeedbackRequest;
 import dev.aira.lambda.feedback.service.FeedbackService;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
@@ -11,12 +13,14 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 @Path("/avaliacao")
+@ApplicationScoped
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class FeedbackResource {
 
     private final FeedbackService feedbackService;
 
+    @Inject
     public FeedbackResource(FeedbackService feedbackService) {
         this.feedbackService = feedbackService;
     }

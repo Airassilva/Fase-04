@@ -21,7 +21,7 @@ public class AlertFeedbackService {
 
     public void enviarSNS(Feedback feedback) {
             var message = new FeedbackMessage(feedback);
-            log.info("Enviando feedback SNS feedbackId={}", message.getFeedbackId());
+            log.info("Enviando feedback SNS Urgente feedbackDescricao={}", message.getDescricao());
             feedbackSNSProducer.enviarAlerta(message);
     }
 }
