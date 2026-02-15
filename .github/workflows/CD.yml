@@ -1,0 +1,84 @@
+name: CD Pipeline
+
+on:
+  workflow_run:
+    workflows: [ "CI Pipeline" ]
+    types: [ completed ]
+    branches: [ "main" ]
+
+env:
+  JAVA_VERSION: '17'
+  WORKING_DIR: feedback-system
+  AWS_REGION: us-east-2
+
+jobs:
+  build:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    name: Build Lambda ZIP
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Build ZIP
+        working-directory: ${{ env.WORKING_DIR }}
+        run: mvn clean package -DskipTests
+
+      - name: Upload ZIP artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: lambda-zip
+          path: ${{ env.WORKING_DIR }}/target/function.zip
+          retention-days: 1
+
+  deploy:
+    name: Deploy to AWS
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download ZIP artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: lambda-zip
+          path: ${{ env.WORKING_DIR }}/target/
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Update Lambda Code
+        run: |
+          aws lambda update-function-code \
+            --function-name feedback-lambda-rest \
+            --zip-file fileb://${{ env.WORKING_DIR }}/target/function.zip \
+            --region ${{ env.AWS_REGION }}
+
+      - name: Wait Lambda update
+        run: |
+          aws lambda wait function-updated \
+            --function-name feedback-lambda-rest \
+            --region ${{ env.AWS_REGION }}
+
+      - name: Smoke test
+        run: |
+          curl -sf -X POST \
+            "https://9fxbpy6rtd.execute-api.us-east-2.amazonaws.com/avaliacao" \
+            -H "Content-Type: application/json" \
+            -d '{"descricao": "smoke test", "nota": 9}' \
+            && echo "✅ Deploy OK!" \
+            || echo "❌ Smoke test falhou"
