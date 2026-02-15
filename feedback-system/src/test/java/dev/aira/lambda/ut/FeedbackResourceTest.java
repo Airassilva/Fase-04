@@ -8,8 +8,8 @@ import dev.aira.lambda.feedback.service.FeedbackService;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
+import jakarta.validation.ConstraintViolationException;
 import jakarta.ws.rs.core.Response;
-import org.jboss.resteasy.api.validation.ResteasyViolationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -66,14 +66,14 @@ class FeedbackResourceTest {
     @Test
     void criarAvaliacaoComNotaInvalida(){
         var feedbackRequest = new FeedbackRequest(-10, "Nota Invalida!");
-        assertThrows(ResteasyViolationException.class,
+        assertThrows(ConstraintViolationException.class,
                 () -> feedbackResource.enviarFeedback(feedbackRequest));
     }
 
     @Test
     void criarAvaliacaoComDescricaoInvalida(){
         var feedbackRequest = new FeedbackRequest(2, " ");
-        assertThrows(ResteasyViolationException.class,
+        assertThrows(ConstraintViolationException.class,
                 () -> feedbackResource.enviarFeedback(feedbackRequest));
     }
 }

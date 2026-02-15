@@ -37,6 +37,26 @@ public class Feedback {
     public Feedback() {
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setUrgencia(Urgencia urgencia) {
+        this.urgencia = urgencia;
+    }
+
+    public void setNota(Integer nota) {
+        this.nota = nota;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public void setCriadoEm(String criadoEm) {
+        this.criadoEm = criadoEm;
+    }
+
     public Feedback(String id, Integer nota, String descricao) {
         this.id = id;
         this.nota = nota;
