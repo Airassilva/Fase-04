@@ -16,7 +16,7 @@ env:
   WORKING_DIR: feedback-system
 
   # Variáveis fake para testes
-  AWS_REGION: us-east-1
+  AWS_REGION: us-east-2
   AWS_ACCESS_KEY_ID: fake-access-key
   AWS_SECRET_ACCESS_KEY: fake-secret-key
   AWS_SNS_FEEDBACK_TOPIC_ARN: arn:aws:sns:us-east-1:123456789012:fake-topic
@@ -61,9 +61,3 @@ jobs:
           name: test-results
           path: ${{ env.WORKING_DIR }}/target/surefire-reports/
           retention-days: 7
-
-      - name: Update dependency graph
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        uses: advanced-security/maven-dependency-submission-action@571e99aab1055c2e71a1e2309b9691de18d6b7d6
-        with:
-          directory: ${{ env.WORKING_DIR }}
