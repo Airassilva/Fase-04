@@ -10,6 +10,10 @@ import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneOffset;
+
 @ApplicationScoped
 public class ProcessorService {
 
@@ -50,12 +54,17 @@ public class ProcessorService {
     }
 
     private void atualizarAgregacaoPorDia(String dataEnvio) {
-        Relatorio agregacao = relatorioRepository.obterPoTipoEChave("AGR_DIA", dataEnvio);
+        LocalDate dia = Instant.parse(dataEnvio)
+                .atZone(ZoneOffset.UTC)
+                .toLocalDate();
+        String chave = dia.toString();
+
+        Relatorio agregacao = relatorioRepository.obterPoTipoEChave("AGR_DIA", chave);
 
         if (agregacao == null) {
             agregacao = new Relatorio();
             agregacao.setTipo("AGR_DIA");
-            agregacao.setChave(dataEnvio);
+            agregacao.setChave(chave);
             agregacao.setQuantidade(1);
         } else {
             agregacao.setQuantidade(agregacao.getQuantidade() + 1);
