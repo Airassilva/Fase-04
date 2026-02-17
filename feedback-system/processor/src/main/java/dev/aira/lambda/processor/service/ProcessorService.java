@@ -10,6 +10,10 @@ import jakarta.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneOffset;
+
 @ApplicationScoped
 public class ProcessorService {
 
@@ -28,16 +32,21 @@ public class ProcessorService {
             FeedbackMessage  feedbackMessage = objectMapper.readValue(message,FeedbackMessage.class);
             log.info("[PROCESSAR FEEDBACK] {}", feedbackMessage);
 
+            LocalDate dia = Instant.parse(feedbackMessage.getDataEnvio())
+                    .atZone(ZoneOffset.UTC)
+                    .toLocalDate();
+            String chave = dia.toString();
+
             Relatorio relatorio = new Relatorio(
                     "FEEDBACK",
                     feedbackMessage.getFeedbackId(),
                     feedbackMessage.getUrgencia(),
                     feedbackMessage.getDescricao(),
-                    feedbackMessage.getDataEnvio()
+                    chave
             );
 
             persistirDados(relatorio);
-            atualizarAgregacaoPorDia(feedbackMessage.getDataEnvio());
+            atualizarAgregacaoPorDia(chave);
             atualizarAgregacaoPorUrgencia(feedbackMessage.getUrgencia());
 
         }catch (JsonProcessingException e) {

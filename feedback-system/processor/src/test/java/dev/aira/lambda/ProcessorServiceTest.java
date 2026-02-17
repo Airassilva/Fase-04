@@ -30,7 +30,7 @@ class ProcessorServiceTest {
 
     @Test
     void processarFeedbackComSucesso(){
-        String messageBody = "{\"feedbackId\":\"123\",\"descricao\":\"Bom serviço\",\"urgencia\":\"MEDIA\",\"dataEnvio\":\"2024-02-17\"}";
+        String messageBody = "{\"feedbackId\":\"123\",\"descricao\":\"Bom serviço\",\"urgencia\":\"MEDIA\",\"dataEnvio\":\"2024-02-17T10:00:00Z\"}";
 
         when(relatorioRepository.obterPoTipoEChave("AGR_DIA", "2024-02-17")).thenReturn(null);
         when(relatorioRepository.obterPoTipoEChave("AGR_URGENCIA", "MEDIA")).thenReturn(null);
@@ -42,20 +42,20 @@ class ProcessorServiceTest {
 
     @Test
     void atualizarAgregacaoPorDiaComNovaEntrada(){
-        String messageBody = "{\"feedbackId\":\"456\",\"descricao\":\"Serviço rápido\",\"urgencia\":\"ALTA\",\"dataEnvio\":\"2024-02-18\"}";
+        String messageBody = "{\"feedbackId\":\"456\",\"descricao\":\"Serviço rápido\",\"urgencia\":\"ALTA\",\"dataEnvio\":\"2024-02-17T10:00:00Z\"}";
 
-        when(relatorioRepository.obterPoTipoEChave("AGR_DIA", "2024-02-18")).thenReturn(null);
+        when(relatorioRepository.obterPoTipoEChave("AGR_DIA", "2024-02-17")).thenReturn(null);
         when(relatorioRepository.obterPoTipoEChave("AGR_URGENCIA", "ALTA")).thenReturn(null);
 
         service.processarFeedback(messageBody);
 
-        verify(relatorioRepository, times(1)).obterPoTipoEChave("AGR_DIA", "2024-02-18");
+        verify(relatorioRepository, times(1)).obterPoTipoEChave("AGR_DIA", "2024-02-17");
         verify(relatorioRepository, times(3)).save(any(Relatorio.class));
     }
 
     @Test
     void atualizarAgregacaoPorDiaComEntradaExistente(){
-        String messageBody = "{\"feedbackId\":\"789\",\"descricao\":\"Atendimento bom\",\"urgencia\":\"BAIXA\",\"dataEnvio\":\"2024-02-17\"}";
+        String messageBody = "{\"feedbackId\":\"789\",\"descricao\":\"Atendimento bom\",\"urgencia\":\"BAIXA\",\"dataEnvio\":\"2024-02-17T10:00:00Z\"}";
 
         Relatorio agregacaoDiaExistente = new Relatorio();
         agregacaoDiaExistente.setTipo("AGR_DIA");
@@ -73,7 +73,7 @@ class ProcessorServiceTest {
 
     @Test
     void atualizarAgregacaoPorUrgenciaComNovaEntrada() {
-        String messageBody = "{\"feedbackId\":\"111\",\"descricao\":\"Crítico\",\"urgencia\":\"ALTA\",\"dataEnvio\":\"2024-02-17\"}";
+        String messageBody = "{\"feedbackId\":\"111\",\"descricao\":\"Crítico\",\"urgencia\":\"ALTA\",\"dataEnvio\":\"2024-02-17T10:00:00Z\"}";
 
         when(relatorioRepository.obterPoTipoEChave("AGR_DIA", "2024-02-17")).thenReturn(null);
         when(relatorioRepository.obterPoTipoEChave("AGR_URGENCIA", "ALTA")).thenReturn(null);
@@ -86,7 +86,7 @@ class ProcessorServiceTest {
 
     @Test
     void atualizarAgregacaoPorUrgenciaComEntradaExistente(){
-        String messageBody = "{\"feedbackId\":\"222\",\"descricao\":\"Médio\",\"urgencia\":\"MEDIA\",\"dataEnvio\":\"2024-02-17\"}";
+        String messageBody = "{\"feedbackId\":\"222\",\"descricao\":\"Médio\",\"urgencia\":\"MEDIA\",\"dataEnvio\":\"2024-02-17T10:00:00Z\"}";
 
         Relatorio agregacaoUrgenciaExistente = new Relatorio();
         agregacaoUrgenciaExistente.setTipo("AGR_URGENCIA");
@@ -122,7 +122,7 @@ class ProcessorServiceTest {
 
     @Test
     void erroAoSalvarFeedback(){
-        String messageBody = "{\"feedbackId\":\"333\",\"descricao\":\"Teste\",\"urgencia\":\"BAIXA\",\"dataEnvio\":\"2024-02-17\"}";
+        String messageBody = "{\"feedbackId\":\"333\",\"descricao\":\"Teste\",\"urgencia\":\"BAIXA\",\"dataEnvio\":\"2024-02-17T10:00:00Z\"}";
 
         doThrow(PersistenceException.class).when(relatorioRepository).save(any(Relatorio.class));
 
@@ -134,7 +134,7 @@ class ProcessorServiceTest {
 
     @Test
     void erroAoAtualizarAgregacaoPorDia(){
-        String messageBody = "{\"feedbackId\":\"444\",\"descricao\":\"Teste\",\"urgencia\":\"MEDIA\",\"dataEnvio\":\"2024-02-17\"}";
+        String messageBody = "{\"feedbackId\":\"444\",\"descricao\":\"Teste\",\"urgencia\":\"MEDIA\",\"dataEnvio\":\"2024-02-17T10:00:00Z\"}";
 
         when(relatorioRepository.obterPoTipoEChave("AGR_DIA", "2024-02-17")).thenReturn(null);
         doThrow(PersistenceException.class).when(relatorioRepository).save(any(Relatorio.class));
@@ -146,7 +146,7 @@ class ProcessorServiceTest {
 
     @Test
     void erroAoAtualizarAgregacaoPorUrgencia(){
-        String messageBody = "{\"feedbackId\":\"555\",\"descricao\":\"Teste\",\"urgencia\":\"ALTA\",\"dataEnvio\":\"2024-02-17\"}";
+        String messageBody = "{\"feedbackId\":\"555\",\"descricao\":\"Teste\",\"urgencia\":\"ALTA\",\"dataEnvio\":\"2024-02-17T10:00:00Z\"}";
 
         when(relatorioRepository.obterPoTipoEChave("AGR_DIA", "2024-02-17")).thenReturn(null);
         when(relatorioRepository.obterPoTipoEChave("AGR_URGENCIA", "ALTA")).thenReturn(null);
