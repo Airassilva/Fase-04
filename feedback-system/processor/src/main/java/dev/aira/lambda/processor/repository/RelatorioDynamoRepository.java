@@ -19,10 +19,9 @@ public class RelatorioDynamoRepository implements RelatorioRepository {
     private static final TableSchema<Relatorio> SCHEMA = TableSchema.fromBean(Relatorio.class);
     private final DynamoDbTable<Relatorio> table;
 
-    public RelatorioDynamoRepository(
-            DynamoDbEnhancedClient enhancedClient,
-            @ConfigProperty(name = "relatorio.table.name")
-            String tableName) {
+    public RelatorioDynamoRepository( DynamoDbEnhancedClient enhancedClient,
+                                      @ConfigProperty(name = "relatorio.table.name")
+                                      String tableName) {
         this.table = enhancedClient.table(tableName, SCHEMA);
     }
 
