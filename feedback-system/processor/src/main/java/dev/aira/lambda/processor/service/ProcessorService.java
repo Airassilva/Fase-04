@@ -27,6 +27,7 @@ public class ProcessorService {
         try {
             FeedbackMessage  feedbackMessage = objectMapper.readValue(message,FeedbackMessage.class);
             log.info("[PROCESSAR FEEDBACK] {}", feedbackMessage);
+
             Relatorio relatorio = new Relatorio(
                     "FEEDBACK",
                     feedbackMessage.getFeedbackId(),
@@ -34,9 +35,11 @@ public class ProcessorService {
                     feedbackMessage.getDescricao(),
                     feedbackMessage.getDataEnvio()
             );
+
             persistirDados(relatorio);
             atualizarAgregacaoPorDia(feedbackMessage.getDataEnvio());
             atualizarAgregacaoPorUrgencia(feedbackMessage.getUrgencia());
+
         }catch (JsonProcessingException e) {
             log.info("Erro ao processar feedback message", e);
         }
