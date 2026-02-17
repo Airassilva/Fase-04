@@ -21,7 +21,7 @@ public class FilaFeedbackService {
 
     public void enviarSQS(Feedback feedback) {
             var message = new FeedbackMessage(feedback);
-            log.info("Enviando feedback SQS message={}", message);
+            log.info("Enviando feedback SQS message={}", message.getFeedbackId());
             feedbackSQSProducer.enviar(message);
     }
 }
