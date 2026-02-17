@@ -6,6 +6,7 @@ public class FeedbackMessage {
     private String descricao;
     private String urgencia;
     private String dataEnvio;
+    private String feedbackId;
 
     public String getDescricao() {
         return descricao;
@@ -19,7 +20,12 @@ public class FeedbackMessage {
         return dataEnvio;
     }
 
+    public String getFeedbackId() {
+        return feedbackId;
+    }
+
     public FeedbackMessage(Feedback feedback) {
+        this.feedbackId = feedback.getId();
         this.descricao = feedback.getDescricao();
         this.urgencia = feedback.getUrgencia().name();
         this.dataEnvio = feedback.getCriadoEm();
