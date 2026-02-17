@@ -14,8 +14,6 @@ permissions:
 env:
   JAVA_VERSION: '17'
   WORKING_DIR: feedback-system
-
-  # Variáveis fake para testes
   AWS_REGION: us-east-2
   AWS_ACCESS_KEY_ID: fake-access-key
   AWS_SECRET_ACCESS_KEY: fake-secret-key
@@ -27,12 +25,30 @@ jobs:
   build-and-analyze:
     name: Build, Test & SonarQube
     runs-on: ubuntu-latest
+    outputs:
+      feedback_changed: ${{ steps.detect.outputs.feedback }}
+      processor_changed: ${{ steps.detect.outputs.processor }}
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # necessário para SonarQube
+          fetch-depth: 0
+
+      - name: Detect changes
+        id: detect
+        run: |
+          if git diff --name-only origin/main HEAD | grep -q '^feedback-system/feedback/'; then
+            echo "feedback=true" >> $GITHUB_OUTPUT
+          else
+            echo "feedback=false" >> $GITHUB_OUTPUT
+          fi
+          
+          if git diff --name-only origin/main HEAD | grep -q '^feedback-system/processor/'; then
+            echo "processor=true" >> $GITHUB_OUTPUT
+          else
+            echo "processor=false" >> $GITHUB_OUTPUT
+          fi
 
       - name: Set up JDK ${{ env.JAVA_VERSION }}
         uses: actions/setup-java@v4
@@ -61,3 +77,19 @@ jobs:
           name: test-results
           path: ${{ env.WORKING_DIR }}/target/surefire-reports/
           retention-days: 7
+
+      - name: Upload Feedback ZIP
+        if: steps.detect.outputs.feedback == 'true' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v4
+        with:
+          name: feedback-zip
+          path: ${{ env.WORKING_DIR }}/feedback/target/function.zip
+          retention-days: 1
+
+      - name: Upload Processor ZIP
+        if: steps.detect.outputs.processor == 'true' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v4
+        with:
+          name: processor-zip
+          path: ${{ env.WORKING_DIR }}/processor/target/function.zip
+          retention-days: 1
