@@ -35,6 +35,7 @@ public class ReportHandlerResource implements RequestHandler<Map<String, Object>
 
     @Override
     public String handleRequest(Map<String, Object> stringObjectMap, Context context) {
+
         try{
             DadosRelatorioSemanal dados = relatorioService.gerarDadosSemanaAtual();
             byte[] pdfBytes = gerarPdfService.gerarPdf(dados);
