@@ -4,5 +4,5 @@ import dev.aira.lambda.processor.domain.Relatorio;
 
 public interface RelatorioRepository {
     void save(Relatorio relatorio);
-    Relatorio obterPoTipoEChave(String tipo, String chave);
+    Relatorio obterPorTipoEChave(String tipo, String chave);
 }

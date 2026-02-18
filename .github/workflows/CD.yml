@@ -80,3 +80,29 @@ jobs:
             --function-name processor-feedback \
             --region ${{ env.AWS_REGION }}
           echo "✅ Processor Lambda atualizado com sucesso"
+
+      - name: Download Report ZIP
+        uses: dawidd6/action-download-artifact@v3
+        with:
+          workflow: CI.yml
+          name: report-zip
+          path: ./report-artifact
+          if_no_artifact_found: warn
+
+      - name: Deploy Report Lambda
+        if: hashFiles('./report-artifact/function.zip') != ''
+        run: |
+          aws lambda update-function-code \
+            --function-name report-feedback \
+            --zip-file fileb://./report-artifact/function.zip \
+            --region ${{ env.AWS_REGION }} \
+            || (echo "❌ Deploy Report falhou" && exit 1)
+          echo "✅ Report Lambda deployado"
+
+      - name: Validate Report Deployment
+        if: hashFiles('./report-artifact/function.zip') != ''
+        run: |
+          aws lambda wait function-updated \
+            --function-name report-feedback \
+            --region ${{ env.AWS_REGION }}
+          echo "✅ Report Lambda atualizado com sucesso"
