@@ -59,7 +59,7 @@ public class ProcessorService {
     }
 
     private void atualizarAgregacaoPorDia(String dataEnvio) {
-        Relatorio agregacao = relatorioRepository.obterPoTipoEChave("AGR_DIA", dataEnvio);
+        Relatorio agregacao = relatorioRepository.obterPorTipoEChave("AGR_DIA", dataEnvio);
 
         if (agregacao == null) {
             agregacao = new Relatorio();
@@ -75,7 +75,7 @@ public class ProcessorService {
     }
 
     private void atualizarAgregacaoPorUrgencia(String urgencia) {
-        Relatorio agregacao = relatorioRepository.obterPoTipoEChave("AGR_URGENCIA", urgencia);
+        Relatorio agregacao = relatorioRepository.obterPorTipoEChave("AGR_URGENCIA", urgencia);
 
         if (agregacao == null) {
             agregacao = new Relatorio();
