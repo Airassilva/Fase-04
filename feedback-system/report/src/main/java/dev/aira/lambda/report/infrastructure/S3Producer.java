@@ -4,6 +4,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.regions.providers.DefaultAwsRegionProviderChain;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 
@@ -17,7 +18,7 @@ public class S3Producer {
     private final S3Presigner presigner;
 
     public S3Producer() {
-        Region region = Region.of(System.getenv("aws.region"));
+        Region region = DefaultAwsRegionProviderChain.builder().build().getRegion();
         this.bucket = System.getenv("aws.s3.bucket-report");
         this.s3Client = S3Client.builder()
                 .region(region)
