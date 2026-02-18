@@ -28,6 +28,7 @@ jobs:
     outputs:
       feedback_changed: ${{ steps.detect.outputs.feedback }}
       processor_changed: ${{ steps.detect.outputs.processor }}
+      report_changed: ${{ steps.detect.outputs.report }}
 
     steps:
       - name: Checkout code
