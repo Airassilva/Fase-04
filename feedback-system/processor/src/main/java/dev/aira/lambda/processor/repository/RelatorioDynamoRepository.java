@@ -36,7 +36,7 @@ public class RelatorioDynamoRepository implements RelatorioRepository {
     }
 
     @Override
-    public Relatorio obterPoTipoEChave(String tipo, String chave) {
+    public Relatorio obterPorTipoEChave(String tipo, String chave) {
         try {
             log.info("obter po tipo chave {}", chave);
             return table.getItem(Key.builder()
