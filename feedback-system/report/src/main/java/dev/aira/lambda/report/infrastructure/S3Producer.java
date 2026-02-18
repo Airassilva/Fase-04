@@ -1,6 +1,8 @@
 package dev.aira.lambda.report.infrastructure;
 
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
@@ -17,9 +19,10 @@ public class S3Producer {
     private final S3Client s3Client;
     private final S3Presigner presigner;
 
-    public S3Producer() {
+    @Inject
+    public S3Producer( @ConfigProperty(name = "aws.s3.bucket-report") String bucket) {
         Region region = DefaultAwsRegionProviderChain.builder().build().getRegion();
-        this.bucket = System.getenv("aws.s3.bucket-report");
+        this.bucket = bucket;
         this.s3Client = S3Client.builder()
                 .region(region)
                 .credentialsProvider(DefaultCredentialsProvider.builder().build())
