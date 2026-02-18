@@ -46,7 +46,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>io.quarkiverse.amazonservices</groupId>
+            <groupId>io.quarkus</groupId>
             <artifactId>quarkus-amazon-lambda</artifactId>
         </dependency>
         <dependency>
@@ -92,10 +92,6 @@
             <groupId>io.rest-assured</groupId>
             <artifactId>rest-assured</artifactId>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.amazonaws</groupId>
-            <artifactId>aws-lambda-java-core</artifactId>
         </dependency>
     </dependencies>
 
